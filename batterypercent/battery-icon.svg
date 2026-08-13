@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 120 120" role="img" aria-label="Battery icon">
+  <defs>
+    <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#66bb6a"/>
+      <stop offset="100%" stop-color="#2e7d32"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="28" width="88" height="64" rx="8" fill="#222"/>
+  <rect x="12" y="32" width="80" height="56" rx="6" fill="#fff"/>
+  <rect x="12" y="32" width="1" height="56" rx="0" fill="none"/>
+  <rect x="18" y="38" width="64" height="44" rx="5" fill="url(#g)"/>
+  <rect x="96" y="44" width="8" height="32" rx="2" fill="#222"/>
+</svg>

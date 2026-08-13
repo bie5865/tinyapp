@@ -11,6 +11,10 @@
 <meta name="apple-mobile-web-app-title" content="Percent Battery">
 <meta name="theme-color" content="#2E7D32">
 
+<!-- Icons -->
+<link rel="icon" href="battery-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="battery-icon.svg">
+
 <style>
 * { box-sizing:border-box; }
 
@@ -86,6 +90,7 @@ input:focus{
     margin:22px auto 12px;
     position:relative;
     padding:6px;
+    cursor:pointer; /* indicate clickable */
 }
 
 .battery::after{
@@ -150,7 +155,8 @@ step="0.01"
 placeholder="Enter Voltage"
 inputmode="decimal">
 
-<div class="battery">
+<!-- battery is now keyboard-focusable and clickable -->
+<div class="battery" id="battery" role="button" tabindex="0" aria-label="Battery; click to enter voltage">
     <div id="level" class="level"></div>
 </div>
 
@@ -198,8 +204,24 @@ const table=[
 ];
 
 const input=document.getElementById("voltage");
+const batteryEl=document.getElementById('battery');
 
 input.addEventListener("input",calculate);
+
+// When battery icon is clicked (or activated via keyboard), focus the input and select its content
+batteryEl.addEventListener('click', () => {
+  input.focus();
+  // select the current value for quick replacement
+  try { input.select(); } catch (e) { /* some browsers on number inputs may not support select() */ }
+});
+
+batteryEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    input.focus();
+    try { input.select(); } catch (err) {}
+  }
+});
 
 function calculate(){
 
