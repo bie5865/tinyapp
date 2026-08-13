@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BatteryPercent</title>
+    <style>
+      body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; background:#f6f8fa; }
+      .card { background:#fff; padding:28px; border-radius:12px; box-shadow:0 6px 18px rgba(25,30,35,0.08); text-align:center; width:320px; }
+      h1 { margin:0 0 8px; font-size:20px; }
+      p { margin:8px 0; color:#444; }
+      .value { font-weight:700; font-size:36px; margin-top:12px; }
+      .muted { color:#666; font-size:13px; }
+      button { margin-top:16px; padding:8px 12px; border-radius:8px; border:1px solid #d0d7de; background:#f6f8fa; cursor:pointer; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>BatteryPercent</h1>
+      <p class="muted">A small demo page that shows device battery level (if supported).</p>
+
+      <div id="result">
+        <div class="value">—</div>
+        <div class="muted" id="status">Checking support...</div>
+      </div>
+
+      <button id="refresh">Refresh</button>
+    </div>
+
+    <script>
+      const valueEl = document.querySelector('.value');
+      const statusEl = document.getElementById('status');
+      const refreshBtn = document.getElementById('refresh');
+
+      async function updateBattery() {
+        try {
+          if (!('getBattery' in navigator)) {
+            // Some browsers expose navigator.battery or navigator.mozBattery — try them
+            const alt = navigator.battery || navigator.mozBattery || navigator.webkitBattery;
+            if (!alt) throw new Error('Battery Status API not supported');
+            const level = Math.round(alt.level * 100);
+            valueEl.textContent = level + '%';
+            statusEl.textContent = alt.charging ? 'Charging' : 'Not charging';
+            return;
+          }
+
+          const battery = await navigator.getBattery();
+          const level = Math.round(battery.level * 100);
+          valueEl.textContent = level + '%';
+          statusEl.textContent = battery.charging ? 'Charging' : 'Not charging';
+
+          // update on change
+          battery.onlevelchange = () => valueEl.textContent = Math.round(battery.level * 100) + '%';
+          battery.onchargingchange = () => statusEl.textContent = battery.charging ? 'Charging' : 'Not charging';
+        } catch (err) {
+          valueEl.textContent = '—';
+          statusEl.textContent = 'Battery Status API not available in this browser';
+        }
+      }
+
+      refreshBtn.addEventListener('click', updateBattery);
+      updateBattery();
+    </script>
+  </body>
+</html>
